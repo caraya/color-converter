@@ -25,11 +25,7 @@ export default function App() {
   useEffect(() => {
     try {
       let processedInput = colorInput.trim();
-      if (/^#([A-Fa-f0-9]{3})$/.test(processedInput)) {
-          const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-          processedInput = processedInput.replace(shorthandRegex, (m, r, g, b) => `#${r}${r}${g}${g}${b}${b}`);
-      }
-
+      
       const newColor = new Color(processedInput);
       setColorObj(newColor);
       setParseError('');
