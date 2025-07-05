@@ -24,9 +24,9 @@ export default function App() {
 
   useEffect(() => {
     try {
-      let processedInput = colorInput.trim();
-      
-      const newColor = new Color(processedInput);
+      // The colorjs.io library can handle various color formats directly.
+      // The explicit check for 3-digit hex codes was removed to fix the bug.
+      const newColor = new Color(colorInput.trim());
       setColorObj(newColor);
       setParseError('');
     } catch (e) {
