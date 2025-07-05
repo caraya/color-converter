@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { formatColor, copyToClipboard } from '../utils.js';
 import ColorSwatch from './ColorSwatch.jsx';
 
-const ColorDisplayRow = ({ title, colorObj, formats = ['oklch', 'p3', 'rgb'] }) => {
+const ColorDisplayRow = ({ title, colorObj, formats = ['oklch', 'p3', 'rgb', 'hwb'] }) => {
   if (!colorObj) return null;
 
   const [copiedValue, setCopiedValue] = useState(null);

@@ -6,7 +6,8 @@ const DirectConversions = ({ colorObj }) => {
   if (!colorObj) return null;
 
   const hasAlpha = colorObj.alpha < 1;
-  const allFormats = ['oklch', 'hsl', 'p3', 'rgb', 'hex'];
+  // Added 'hwb' to the list of direct color conversions.
+  const allFormats = ['oklch', 'hsl', 'hwb', 'p3', 'rgb', 'hex'];
   
   const formatsToShow = hasAlpha 
     ? allFormats.filter(f => f !== 'hex')

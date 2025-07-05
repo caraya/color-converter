@@ -6,7 +6,8 @@ export const formatColor = (colorObj, format) => {
     let convertedColor = colorObj;
     let stringOptions = { precision: 3 };
 
-    if (['oklch', 'hsl', 'p3'].includes(format)) {
+    // Added 'hwb' to the list of formats that require explicit conversion.
+    if (['oklch', 'hsl', 'hwb', 'p3'].includes(format)) {
       // Explicitly convert to the target color space before stringifying
       convertedColor = colorObj.to(format);
     } else {
@@ -25,8 +26,9 @@ export const formatColor = (colorObj, format) => {
 
     return result;
   } catch (e) {
+    // If an error occurs during conversion, return 'N/A'.
     console.error(`Error formatting color for ${format}:`, e);
-    return 'Invalid';
+    return 'N/A';
   }
 };
 
