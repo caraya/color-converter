@@ -34,13 +34,21 @@ export const formatColor = (colorObj, format) => {
     // 2. Only perform a gamut check if we are converting *from a different* color space.
     //    This avoids false negatives from floating-point errors when checking a color
     //    that is already within the target space.
+    let outOfGamut = false;
     if (sourceSpaceId !== targetSpaceId) {
-        if (!colorObj.inGamut(targetSpaceId, { epsilon: 1e-5 })) {
-            return 'N/A';
-        }
+      // If the color isn't in gamut for the target space, instead of bailing
+      // out we will produce a closest approximation and mark the result.
+      // This preserves useful output (and allows copying) while clearly
+      // informing the user the value was approximated.
+      if (!colorObj.inGamut(targetSpaceId, { epsilon: 1e-5 })) {
+        outOfGamut = true;
+      }
     }
 
     // 3. Convert the color object to the correct target space.
+    // Attempt the conversion regardless of in-gamut checks. Many color libs
+    // will yield a clamped/closest representation when serializing; we'll
+    // annotate the output when we detected an out-of-gamut case above.
     const convertedColor = colorObj.to(targetSpaceId);
 
     // 4. Serialize that converted color into the desired string format.
@@ -54,6 +62,12 @@ export const formatColor = (colorObj, format) => {
       result = result.replace(/oklch\(([^ ]+) ([^ ]+) none\)/, 'oklch($1 $2 0)');
     } else if (format === 'hsl' && result.includes('none')) {
       result = result.replace(/hsl\(none ([^ ]+) ([^ ]+)\)/, 'hsl(0 $1 $2)');
+    }
+
+    // Append an explicit note for out-of-gamut cases so the UI (and clipboard)
+    // clearly communicate that this is an approximation.
+    if (outOfGamut) {
+      result = `${result} (out of gamut — closest approximation)`;
     }
 
     return result;
