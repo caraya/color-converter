@@ -13,13 +13,13 @@ const DirectConversions = ({ colorObj, gamutMode = 'space' }) => {
     : allFormats;
 
   return (
-    <div className="space-y-3">
-      <h3 className="text-lg font-bold text-gray-900 dark:text-white">Direct Conversions</h3>
+    <section aria-labelledby="direct-conversions-heading" className="space-y-3">
+      <h2 id="direct-conversions-heading" className="text-lg font-bold text-gray-900 dark:text-white">Direct Conversions</h2>
       {/* Map over the formats and render a ConversionRow for each */}
       {formatsToShow.map(format => (
         <ConversionRow key={format} colorObj={colorObj} format={format} mode={gamutMode} />
       ))}
-    </div>
+    </section>
   );
 };
 

@@ -28,34 +28,43 @@ const ColorHarmonies = ({ colorObj, gamutMode = 'space' }) => {
     if (!colorObj || !harmonies.triadic) return null;
 
     return (
-        <div className="space-y-4">
+        <section aria-labelledby="color-harmonies-heading" className="space-y-4">
+            <h2 id="color-harmonies-heading" className="text-lg font-bold text-gray-900 dark:text-white">
+                Color Harmonies
+            </h2>
             <details>
-                <summary className="text-lg font-bold text-gray-900 dark:text-white cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                    Complementary
+                <summary className="cursor-pointer transition-colors hover:text-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:hover:text-blue-400 dark:focus-visible:outline-blue-400">
+                    <h3 className="inline text-base font-semibold text-gray-900 dark:text-white">
+                        Complementary
+                    </h3>
                 </summary>
                 <div className="mt-3">
-                    {harmonies.complementary?.map((c, i) => <ColorDisplayRow key={i} title="Complement" colorObj={c} gamutMode={gamutMode} />)}
+                    {harmonies.complementary?.map((c, i) => <ColorDisplayRow key={i} titleAs="h4" title="Complement" colorObj={c} gamutMode={gamutMode} />)}
                 </div>
             </details>
 
             <details>
-                <summary className="text-lg font-bold text-gray-900 dark:text-white cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                    Triadic Harmony
+                <summary className="cursor-pointer transition-colors hover:text-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:hover:text-blue-400 dark:focus-visible:outline-blue-400">
+                    <h3 className="inline text-base font-semibold text-gray-900 dark:text-white">
+                        Triadic Harmony
+                    </h3>
                 </summary>
                 <div className="space-y-2 mt-3">
-                    {harmonies.triadic?.map((c, i) => <ColorDisplayRow key={i} title={i === 0 ? 'Base' : `Triad ${i + 1}`} colorObj={c} gamutMode={gamutMode} />)}
+                    {harmonies.triadic?.map((c, i) => <ColorDisplayRow key={i} titleAs="h4" title={i === 0 ? 'Base' : `Triad ${i + 1}`} colorObj={c} gamutMode={gamutMode} />)}
                 </div>
             </details>
 
             <details>
-                <summary className="text-lg font-bold text-gray-900 dark:text-white cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                    Tetradic Harmony
+                <summary className="cursor-pointer transition-colors hover:text-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:hover:text-blue-400 dark:focus-visible:outline-blue-400">
+                    <h3 className="inline text-base font-semibold text-gray-900 dark:text-white">
+                        Tetradic Harmony
+                    </h3>
                 </summary>
                 <div className="space-y-2 mt-3">
-                    {harmonies.tetradic?.map((c, i) => <ColorDisplayRow key={i} title={i === 0 ? 'Base' : `Tetrad ${i + 1}`} colorObj={c} gamutMode={gamutMode} />)}
+                    {harmonies.tetradic?.map((c, i) => <ColorDisplayRow key={i} titleAs="h4" title={i === 0 ? 'Base' : `Tetrad ${i + 1}`} colorObj={c} gamutMode={gamutMode} />)}
                 </div>
             </details>
-        </div>
+        </section>
     );
 };
 

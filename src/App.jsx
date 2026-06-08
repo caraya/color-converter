@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import Color from 'colorjs.io';
 
 import DirectConversions from './components/DirectConversions.jsx';
@@ -55,6 +55,8 @@ export default function App() {
             type="text"
             value={colorInput}
             onChange={(e) => setColorInput(e.target.value)}
+            aria-invalid={parseError ? 'true' : undefined}
+            aria-describedby={parseError ? 'color-input-error' : undefined}
             className={`w-full px-4 py-2 rounded-lg border text-base transition-all duration-200 ${
               parseError
               ? 'border-red-500 focus:ring-red-500 focus:border-red-500' 
@@ -62,19 +64,33 @@ export default function App() {
             } bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500`}
             placeholder="e.g., oklch(65% 0.25 25)"
           />
-          {parseError && <p className="mt-2 text-sm text-red-600 dark:text-red-400">{parseError}</p>}
+          {parseError && (
+            <p
+              id="color-input-error"
+              role="alert"
+              className="mt-2 text-sm text-red-600 dark:text-red-400"
+            >
+              {parseError}
+            </p>
+          )}
           <div className="mt-3 flex items-center gap-3 text-sm">
-            <span className="text-xs text-gray-600 dark:text-gray-400">Gamut mapping:</span>
+            <label htmlFor="gamut-mode" className="text-xs text-gray-600 dark:text-gray-400">
+              Gamut mapping:
+            </label>
             <select
+              id="gamut-mode"
               value={gamutMode}
               onChange={(e) => setGamutMode(e.target.value)}
+              aria-describedby="gamut-mode-help"
               className="px-2 py-1 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm"
             >
               <option value="space">Clamp to space</option>
               <option value="perceptual">Perceptual (OKLCH)</option>
               <option value="both">Show both</option>
             </select>
-            <p className="text-xs text-gray-500 dark:text-gray-400 ml-2">Choose how out-of-gamut colors are mapped/visualized.</p>
+            <p id="gamut-mode-help" className="text-xs text-gray-600 dark:text-gray-300 ml-2">
+              Choose how out-of-gamut colors are mapped and visualized.
+            </p>
           </div>
         </div>
 
@@ -91,7 +107,7 @@ export default function App() {
           </div>
         )}
       </main>
-      <footer className="text-center p-4 mt-8 text-xs text-gray-500 dark:text-gray-400">
+      <footer className="text-center p-4 mt-8 text-xs text-gray-600 dark:text-gray-300">
         <p>Powered by React and color.js</p>
       </footer>
     </div>
