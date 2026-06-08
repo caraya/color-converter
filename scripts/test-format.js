@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import Color from 'colorjs.io';
-import { formatColor } from '../src/utils.js';
+import { formatColor, formatColorVariants } from '../src/utils.js';
 
 // Small manual test runner to quickly validate out-of-gamut handling.
 const cases = [
@@ -19,11 +19,13 @@ const cases = [
 
 for (const c of cases) {
   const output = formatColor(c.color, c.format);
+  const variants = formatColorVariants(c.color, c.format);
   const containsNote = output && output.toLowerCase().includes('out of gamut');
   console.log(`\nCase: ${c.name}`);
   console.log(`  input: ${c.color.toString()}`);
   console.log(`  format: ${c.format}`);
-  console.log(`  output: ${output}`);
+  console.log(`  output (clamped): ${variants ? variants.space.value : output}`);
+  console.log(`  output (perceptual): ${variants ? variants.perceptual.value : output}`);
   console.log(`  has out-of-gamut note: ${containsNote}`);
 }
 

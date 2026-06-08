@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import ColorDisplayRow from '/src/components/ColorDisplayRow.jsx';
 
-const ColorScale = ({ colorObj }) => {
+const ColorScale = ({ colorObj, gamutMode = 'space' }) => {
   const scale = useMemo(() => {
     if (!colorObj) return [];
     try {
@@ -23,7 +23,7 @@ const ColorScale = ({ colorObj }) => {
       </summary>
       <div className="space-y-2 mt-3">
         {scale.map((c, i) => (
-          <ColorDisplayRow key={i} title={i === 5 ? 'Base Color' : `Step ${i - 5}`} colorObj={c} />
+          <ColorDisplayRow key={i} title={i === 5 ? 'Base Color' : `Step ${i - 5}`} colorObj={c} gamutMode={gamutMode} />
         ))}
       </div>
     </details>

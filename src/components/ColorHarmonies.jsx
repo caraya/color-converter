@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import ColorDisplayRow from './ColorDisplayRow.jsx';
 
-const ColorHarmonies = ({ colorObj }) => {
+const ColorHarmonies = ({ colorObj, gamutMode = 'space' }) => {
     const harmonies = useMemo(() => {
         if (!colorObj) return {};
         try {
@@ -34,7 +34,7 @@ const ColorHarmonies = ({ colorObj }) => {
                     Complementary
                 </summary>
                 <div className="mt-3">
-                    {harmonies.complementary?.map((c, i) => <ColorDisplayRow key={i} title="Complement" colorObj={c} />)}
+                    {harmonies.complementary?.map((c, i) => <ColorDisplayRow key={i} title="Complement" colorObj={c} gamutMode={gamutMode} />)}
                 </div>
             </details>
 
@@ -43,7 +43,7 @@ const ColorHarmonies = ({ colorObj }) => {
                     Triadic Harmony
                 </summary>
                 <div className="space-y-2 mt-3">
-                    {harmonies.triadic?.map((c, i) => <ColorDisplayRow key={i} title={i === 0 ? 'Base' : `Triad ${i + 1}`} colorObj={c} />)}
+                    {harmonies.triadic?.map((c, i) => <ColorDisplayRow key={i} title={i === 0 ? 'Base' : `Triad ${i + 1}`} colorObj={c} gamutMode={gamutMode} />)}
                 </div>
             </details>
 
@@ -52,7 +52,7 @@ const ColorHarmonies = ({ colorObj }) => {
                     Tetradic Harmony
                 </summary>
                 <div className="space-y-2 mt-3">
-                    {harmonies.tetradic?.map((c, i) => <ColorDisplayRow key={i} title={i === 0 ? 'Base' : `Tetrad ${i + 1}`} colorObj={c} />)}
+                    {harmonies.tetradic?.map((c, i) => <ColorDisplayRow key={i} title={i === 0 ? 'Base' : `Tetrad ${i + 1}`} colorObj={c} gamutMode={gamutMode} />)}
                 </div>
             </details>
         </div>

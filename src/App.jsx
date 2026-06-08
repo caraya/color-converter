@@ -10,6 +10,7 @@ export default function App() {
   const [colorObj, setColorObj] = useState(null);
   const [parseError, setParseError] = useState('');
   const [isDark, setIsDark] = useState(false);
+  const [gamutMode, setGamutMode] = useState('space');
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -62,13 +63,26 @@ export default function App() {
             placeholder="e.g., oklch(65% 0.25 25)"
           />
           {parseError && <p className="mt-2 text-sm text-red-600 dark:text-red-400">{parseError}</p>}
+          <div className="mt-3 flex items-center gap-3 text-sm">
+            <span className="text-xs text-gray-600 dark:text-gray-400">Gamut mapping:</span>
+            <select
+              value={gamutMode}
+              onChange={(e) => setGamutMode(e.target.value)}
+              className="px-2 py-1 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm"
+            >
+              <option value="space">Clamp to space</option>
+              <option value="perceptual">Perceptual (OKLCH)</option>
+              <option value="both">Show both</option>
+            </select>
+            <p className="text-xs text-gray-500 dark:text-gray-400 ml-2">Choose how out-of-gamut colors are mapped/visualized.</p>
+          </div>
         </div>
 
         {colorObj ? (
           <div className="space-y-8">
-            <DirectConversions colorObj={colorObj} />
-            <ColorScale colorObj={colorObj} />
-            <ColorHarmonies colorObj={colorObj} />
+            <DirectConversions colorObj={colorObj} gamutMode={gamutMode} />
+            <ColorScale colorObj={colorObj} gamutMode={gamutMode} />
+            <ColorHarmonies colorObj={colorObj} gamutMode={gamutMode} />
           </div>
         ) : (
           <div className="text-center py-16 px-6 bg-white dark:bg-gray-800 rounded-lg">

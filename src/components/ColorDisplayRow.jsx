@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { formatColor, copyToClipboard } from '../utils.js';
+import { formatColor, formatColorVariants, copyToClipboard } from '../utils.js';
 import ColorSwatch from './ColorSwatch.jsx';
 
-const ColorDisplayRow = ({ title, colorObj, formats = ['oklch', 'p3', 'rgb', 'hwb'] }) => {
+const ColorDisplayRow = ({ title, colorObj, formats = ['oklch', 'p3', 'rgb', 'hwb'], gamutMode = 'space' }) => {
   if (!colorObj) return null;
 
   const [copiedValue, setCopiedValue] = useState(null);
@@ -20,29 +20,61 @@ const ColorDisplayRow = ({ title, colorObj, formats = ['oklch', 'p3', 'rgb', 'hw
         <h4 className="font-semibold text-sm text-gray-800 dark:text-gray-200">{title}</h4>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-2 mt-2">
           {formats.map(format => {
-            const value = formatColor(colorObj, format);
-            // If formatColor appended an out-of-gamut note, split it out so
-            // we can style the note and only copy the actual color string.
-            const outOfGamutMarker = ' (out of gamut';
-            const hasNote = value && value.includes(outOfGamutMarker);
-            const baseValue = hasNote ? value.split(outOfGamutMarker)[0].trim() : value;
-            const note = hasNote ? value.slice(value.indexOf('(')).trim() : null;
+            const variants = formatColorVariants(colorObj, format) || { space: { value: formatColor(colorObj, format), outOfGamut: false }, perceptual: { value: formatColor(colorObj, format), outOfGamut: false } };
+            const spaceValue = variants.space.value;
+            const perceptualValue = variants.perceptual.value;
+
+            const showSpace = gamutMode === 'space' || gamutMode === 'both';
+            const showPerceptual = gamutMode === 'perceptual' || gamutMode === 'both';
+
+            const spaceRaw = spaceValue ? spaceValue.split(' (out of gamut')[0].trim() : '';
+            const spaceNote = spaceValue && spaceValue.includes('(out of gamut') ? spaceValue.slice(spaceValue.indexOf('(')) : null;
+
+            const perceptualRaw = perceptualValue ? perceptualValue.split(' (out of gamut')[0].trim() : '';
+            const perceptualNote = perceptualValue && perceptualValue.includes('(out of gamut') ? perceptualValue.slice(perceptualValue.indexOf('(')) : null;
+
             return (
               <div key={format} className="flex items-center justify-between">
                 <div>
-                  <span className="text-xs font-mono text-gray-600 dark:text-gray-400 uppercase">{format}: </span>
-                  <span className="text-xs font-mono text-gray-500 dark:text-gray-300">{baseValue}</span>
-                  {note && (
-                    <div className="text-[10px] italic text-yellow-700 dark:text-yellow-300 mt-0.5">{note}</div>
+                  <div>
+                    <span className="text-xs font-mono text-gray-600 dark:text-gray-400 uppercase">{format}: </span>
+                    {showSpace && (
+                      <div className="inline-block ml-2">
+                        <span className="text-xs font-mono text-gray-500 dark:text-gray-300">{spaceRaw}</span>
+                        {spaceNote && <div className="text-[10px] italic text-yellow-700 dark:text-yellow-300 mt-0.5">{spaceNote}</div>}
+                      </div>
+                    )}
+                  </div>
+
+                  {showPerceptual && gamutMode === 'both' && (
+                    <div className="mt-1">
+                      <span className="text-xs font-mono text-gray-500 dark:text-gray-300">{perceptualRaw}</span>
+                      {perceptualNote && <div className="text-[10px] italic text-yellow-700 dark:text-yellow-300 mt-0.5">{perceptualNote}</div>}
+                    </div>
                   )}
                 </div>
-                <button
-                  onClick={() => handleCopy(baseValue)}
-                  className="text-xs text-blue-600 dark:text-blue-400 hover:underline ml-3 flex-shrink-0"
-                  title={`Click to copy ${value}`}
-                >
-                  {copiedValue === baseValue ? 'Copied!' : 'Copy'}
-                </button>
+
+                <div className="flex items-center space-x-3">
+                  {showSpace && (
+                    <button
+                      onClick={() => handleCopy(spaceRaw)}
+                      className="text-xs text-blue-600 dark:text-blue-400 hover:underline ml-3 flex-shrink-0"
+                      title={`Click to copy ${spaceRaw}`}
+                    >
+                      {copiedValue === spaceRaw ? 'Copied!' : 'Copy'}
+                    </button>
+                  )}
+
+                  {showPerceptual && gamutMode === 'both' && (
+                    <button
+                      onClick={() => handleCopy(perceptualRaw)}
+                      className="text-xs text-blue-600 dark:text-blue-400 hover:underline ml-3 flex-shrink-0"
+                      title={`Click to copy ${perceptualRaw}`}
+                    >
+                      {copiedValue === perceptualRaw ? 'Copied!' : 'Copy'}
+                    </button>
+                  )}
+                </div>
               </div>
             );
           })}
